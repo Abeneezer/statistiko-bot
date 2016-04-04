@@ -14,7 +14,7 @@ public class TestDatabase {
         Class.forName("com.mysql.jdbc.Driver");
         Connection  connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Test", "root", "warcraft");
         Statement stmt = connection.createStatement();
-        stmt.executeUpdate("DROP TABLE WordStat");
+        stmt.executeUpdate("INSERT INTO WordStat VALUES(10, \"nice\", \"tobias\", 1020)");
         stmt.close();
         connection.close();
     }

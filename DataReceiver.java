@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -49,17 +50,20 @@ public class DataReceiver extends HttpServlet {
                 }
                 if(tempObj.getAsJsonObject("message").has("from")){
                     JsonObject user = tempObj.getAsJsonObject("message").getAsJsonObject("from");
-                    if(user.has("usernamer")){
+                    if(user.has("username")){
                         username = user.get("username").getAsString();
+                    }
+                    else{
+                        username = "";
                     }
                 }
                 time = tempObj.getAsJsonObject("message").get("date").getAsInt();
             }
             try{
                 Class.forName("com.mysql.jdbc.Driver");
-                Connection  connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Test", "root", "warcraft");
-                Statement stmt = connection.createStatement();
+                Connection  connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/wordstatistics", "root", "admin");
 
+                Statement stmt = connection.createStatement();
                 ResultSet set = stmt.executeQuery("SELECT id FROM WordStat ORDER BY id DESC LIMIT 1;");
                 set.first();
                 int id = set.getInt(1) + 1;
@@ -71,31 +75,43 @@ public class DataReceiver extends HttpServlet {
                         id++;
                     }
                 }
-                stmt.close();
-                connection.close();
-                }catch (Exception e){e.printStackTrace();}
+
+                }catch (Exception e){
+                    response.setContentType("text/html");
+                    response.setCharacterEncoding("UTF-8");
+                    response.setStatus(500);
+                    PrintWriter writer = response.getWriter();
+                    writer.println("<!DOCTYPE html><html>");
+                    writer.println("<head>");
+                    writer.println("<meta charset=\"UTF-8\" />");
+                    writer.println("<title>Fuck</title>");
+                    writer.println("</head>");
+                    writer.println("<body>");
+
+                    writer.println("<h1>Something went wrong with the server</h1>");
+                    e.printStackTrace(writer);
+                    writer.println("</body>");
+                    writer.println("</html>");
+                }
         }
+        try{
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection  connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/wordstatistics", "root", "admin");
+        Statement stmt2 = connection.createStatement();
+        ResultSet set2 = stmt2.executeQuery("SELECT word FROM WordStat ORDER BY id DESC LIMIT 1;");
+        set2.first();
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(200);
+        PrintWriter writer = response.getWriter();
+        writer.println(set2.getString(1));
+        writer.close();
+        stmt2.close();
+        connection.close();}catch (Exception e){}
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        /*response.setContentType("text/html");
-        response.setCharacterEncoding("UTF-8");
-
-        try (PrintWriter writer = response.getWriter()) {
-
-            writer.println("<!DOCTYPE html><html>");
-            writer.println("<head>");
-            writer.println("<meta charset=\"UTF-8\" />");
-            writer.println("<title>DataReceiver.java:doGet(): Servlet code!</title>");
-            writer.println("</head>");
-            writer.println("<body>");
-
-            writer.println("<h1>This is a simple java servlet.</h1>");
-
-            writer.println("</body>");
-            writer.println("</html>");
-        }*/
     }
 }
 

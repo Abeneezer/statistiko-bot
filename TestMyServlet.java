@@ -308,7 +308,7 @@ public class TestMyServlet {
                 "                    \"type\": \"supergroup\"\n" +
                 "                },\n" +
                 "                \"date\": 1459553981,\n" +
-                "                \"text\": \"Laŭ la vortaro\"\n" +
+                "                \"text\": \"Laŭ la vortaroĝŝĵĥ\"\n" +
                 "            }\n" +
                 "        }\n" +
                 "    ]\n" +
