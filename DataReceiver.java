@@ -14,7 +14,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-@WebServlet(name = "MyServlet")
+@WebServlet(name = "DataReceiver")
 public class DataReceiver extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -61,7 +61,7 @@ public class DataReceiver extends HttpServlet {
             }
             try{
                 Class.forName("com.mysql.jdbc.Driver");
-                Connection  connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/wordstatistics", "root", "admin");
+                Connection  connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/wordstatistics", "root", "warcraft");
 
                 Statement stmt = connection.createStatement();
                 ResultSet set = stmt.executeQuery("SELECT id FROM WordStat ORDER BY id DESC LIMIT 1;");
@@ -77,7 +77,8 @@ public class DataReceiver extends HttpServlet {
                 }
 
                 }catch (Exception e){
-                    response.setContentType("text/html");
+                e.printStackTrace();
+                    /*response.setContentType("text/html");
                     response.setCharacterEncoding("UTF-8");
                     response.setStatus(500);
                     PrintWriter writer = response.getWriter();
@@ -91,12 +92,12 @@ public class DataReceiver extends HttpServlet {
                     writer.println("<h1>Something went wrong with the server</h1>");
                     e.printStackTrace(writer);
                     writer.println("</body>");
-                    writer.println("</html>");
+                    writer.println("</html>");*/
                 }
         }
         try{
         Class.forName("com.mysql.jdbc.Driver");
-        Connection  connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/wordstatistics", "root", "admin");
+        Connection  connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/wordstatistics", "root", "warcraft");
         Statement stmt2 = connection.createStatement();
         ResultSet set2 = stmt2.executeQuery("SELECT word FROM WordStat ORDER BY id DESC LIMIT 1;");
         set2.first();
